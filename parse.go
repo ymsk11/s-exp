@@ -48,7 +48,7 @@ func parseText(tokens []string) *Cons {
 			}
 		}
 	}
-	return result.Cdr
+	return result.Cdr.(*Cons)
 }
 
 // ParseText parse string

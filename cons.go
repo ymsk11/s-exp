@@ -7,7 +7,7 @@ type any interface{}
 // Cons cell
 type Cons struct {
 	Car any
-	Cdr *Cons
+	Cdr any
 }
 
 // Str to string
@@ -24,7 +24,12 @@ func (cons *Cons) Str() string {
 	if cons.Cdr == nil {
 		cdrText = "nil"
 	} else {
-		cdrText = cons.Cdr.Str()
+		switch cdr := cons.Cdr.(type) {
+		case *Cons:
+			cdrText = cdr.Str()
+		default:
+			cdrText = fmt.Sprint(cdr)
+		}
 	}
 
 	return "(" + carText + " . " + cdrText + ")"
