@@ -33,7 +33,11 @@ func prod(a any, b any) any {
 	return a.(int) * b.(int)
 }
 
-func eval(cons *Cons) any {
+func eval(any any) any {
+	cons, ok := any.(*Cons)
+	if ok == false {
+		return any
+	}
 	op := cons.Car.(string)
 	cdr := cons.Cdr.(*Cons)
 	switch op {
@@ -44,9 +48,14 @@ func eval(cons *Cons) any {
 	case "list":
 		return cdr
 	case "car":
-		return eval(cdr.Car.(*Cons)).(*Cons).Car
+		return eval(cdr.Car).(*Cons).Car
 	case "cdr":
-		return eval(cdr.Car.(*Cons)).(*Cons).Cdr
+		return eval(cdr.Car).(*Cons).Cdr
+	case "cons":
+		return &Cons{
+			eval(cdr.Car),
+			eval(cdr.Cdr.(*Cons).Car),
+		}
 	default:
 		return nil
 	}
