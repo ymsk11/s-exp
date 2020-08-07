@@ -28,8 +28,19 @@ func main() {
 	fmt.Println(s.Str())
 	fmt.Println(eval(s))
 
-	stext := "( + ( * 10 10 ) 41 )"
-	cell := ParseText(stext)
-	fmt.Println(cell.Str())
-	fmt.Println(eval(cell))
+	sexps := []string{
+		"( + ( * 10 10 ) 41 )",
+		"( list 1 2 3 4 5 )",
+		"( car ( list 1 2 3 4 5 ) )",
+		"( cdr ( list 1 2 3 4 5 ) )",
+		"( car ( cdr ( list 1 2 3 ) ) )",
+		"( * ( car ( list 3 4 ) ) ( car ( cdr ( list 3 4 ) ) ) )",
+	}
+	for i, text := range sexps {
+		fmt.Println(i, "> ", text)
+		parsed := ParseText(text)
+		print(parsed)
+		print(eval(parsed))
+		fmt.Println("")
+	}
 }

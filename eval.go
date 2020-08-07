@@ -35,13 +35,18 @@ func prod(a any, b any) any {
 
 func eval(cons *Cons) any {
 	op := cons.Car.(string)
+	cdr := cons.Cdr.(*Cons)
 	switch op {
 	case "+":
-		cdr := cons.Cdr.(*Cons)
 		return fold(plus, 0, cdr)
 	case "*":
-		cdr := cons.Cdr.(*Cons)
 		return fold(prod, 1, cdr)
+	case "list":
+		return cdr
+	case "car":
+		return eval(cdr.Car.(*Cons)).(*Cons).Car
+	case "cdr":
+		return eval(cdr.Car.(*Cons)).(*Cons).Cdr
 	default:
 		return nil
 	}

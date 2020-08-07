@@ -4,6 +4,15 @@ import "fmt"
 
 type any interface{}
 
+func print(any any) {
+	switch a := any.(type) {
+	case *Cons:
+		fmt.Println(a.Str())
+	default:
+		fmt.Println(a)
+	}
+}
+
 // Cons cell
 type Cons struct {
 	Car any
