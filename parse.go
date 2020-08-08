@@ -53,5 +53,7 @@ func parseText(tokens []string) *Cons {
 
 // ParseText parse string
 func ParseText(text string) *Cons {
+	text = strings.Replace(text, "(", " ( ", -1)
+	text = strings.Replace(text, ")", " ) ", -1)
 	return parseText(strings.Fields(text)).Car.(*Cons)
 }
