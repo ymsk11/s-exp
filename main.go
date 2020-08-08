@@ -37,6 +37,9 @@ func main() {
 		"(* (car (list 3 4 )) (car (cdr (list 3 4 ))))",
 		"(cons 1 2 )",
 		"(cons (car (list 1 2 )) (cdr (list 1 2 )))",
+		"(atom nil)",
+		"(atom (list 1 2 3))",
+		"(atom 3)",
 	}
 	for i, text := range sexps {
 		fmt.Println(i, "> ", text)

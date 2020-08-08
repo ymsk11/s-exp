@@ -4,19 +4,24 @@ import "fmt"
 
 type any interface{}
 
-func print(any any) {
-	switch a := any.(type) {
-	case *Cons:
-		fmt.Println(a.Str())
-	default:
-		fmt.Println(a)
-	}
-}
+// T is T
+type T struct{}
 
 // Cons cell
 type Cons struct {
 	Car any
 	Cdr any
+}
+
+func print(any any) {
+	switch a := any.(type) {
+	case *Cons:
+		fmt.Println(a.Str())
+	case *T:
+		fmt.Println("T")
+	default:
+		fmt.Println(a)
+	}
 }
 
 // Str to string

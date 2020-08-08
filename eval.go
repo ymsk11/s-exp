@@ -56,6 +56,16 @@ func eval(any any) any {
 			eval(cdr.Car),
 			eval(cdr.Cdr.(*Cons).Car),
 		}
+	case "atom":
+		if cdr.Car == nil {
+			return nil
+		}
+		switch cdr.Car.(type) {
+		case *Cons:
+			return nil
+		default:
+			return &T{}
+		}
 	default:
 		return nil
 	}
