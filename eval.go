@@ -73,6 +73,16 @@ func eval(any any) any {
 			return &T{}
 		}
 		return nil
+	case "if":
+		cond := eval(cdr.Car)
+		t := cdr.Cdr.(*Cons).Car
+		f := cdr.Cdr.(*Cons).Cdr.(*Cons).Car
+		switch cond.(type) {
+		case *T:
+			return eval(t)
+		default:
+			return eval(f)
+		}
 	default:
 		return nil
 	}
