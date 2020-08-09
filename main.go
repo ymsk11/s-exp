@@ -46,6 +46,7 @@ func main() {
 		"(quote (1 2 3 4 5))",
 		"(quote 1)",
 		"(quote (* 1 100))",
+		"(nth 3 (quote ( 0 1 2 3 4 5 )))",
 	}
 	for i, text := range sexps {
 		fmt.Println(i, "> ", text)

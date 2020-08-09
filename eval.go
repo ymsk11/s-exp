@@ -38,8 +38,18 @@ func eval(any any) any {
 	if ok == false {
 		return any
 	}
-	op := cons.Car.(string)
 	cdr := cons.Cdr.(*Cons)
+	switch car := cons.Car.(type) {
+	case string:
+		return evalOperator(car, cdr)
+	case *Cons:
+		return nil
+	default:
+		return nil
+	}
+}
+
+func evalOperator(op string, cdr *Cons) any {
 	switch op {
 	case "+":
 		return fold(plus, 0, cdr)
@@ -85,6 +95,10 @@ func eval(any any) any {
 		}
 	case "quote":
 		return cdr.Car
+	case "nth":
+		n := eval(cdr.Car).(int)
+		target := eval(cdr.Cdr.(*Cons).Car).(*Cons)
+		return eval(target.nth(n))
 	default:
 		return nil
 	}

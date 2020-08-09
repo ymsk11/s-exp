@@ -24,6 +24,14 @@ func print(any any) {
 	}
 }
 
+func (cons *Cons) nth(n int) any {
+	p := cons
+	for i := 0; i < n; i++ {
+		p = p.Cdr.(*Cons)
+	}
+	return p.Car
+}
+
 // Str to string
 func (cons *Cons) Str() string {
 
