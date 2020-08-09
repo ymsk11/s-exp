@@ -66,6 +66,14 @@ func eval(any any) any {
 		default:
 			return &T{}
 		}
+	case "eq":
+		a := eval(cdr.Car)
+		b := eval(cdr.Cdr.(*Cons).Car)
+		if a == b {
+			return &T{}
+		} else {
+			return nil
+		}
 	default:
 		return nil
 	}

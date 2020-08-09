@@ -40,6 +40,7 @@ func main() {
 		"(atom nil)",
 		"(atom (list 1 2 3))",
 		"(atom 3)",
+		"(eq (* 2 3) (* 3 2))",
 	}
 	for i, text := range sexps {
 		fmt.Println(i, "> ", text)
