@@ -43,7 +43,16 @@ func eval(any any) any {
 	case string:
 		return evalOperator(car, cdr)
 	case *Cons:
+		return evalCarCons(car, cdr)
+	default:
 		return nil
+	}
+}
+
+func evalCarCons(car *Cons, cdr *Cons) any {
+	switch op := eval(car).(type) {
+	case *function:
+		return op.eval(cdr)
 	default:
 		return nil
 	}
@@ -99,6 +108,13 @@ func evalOperator(op string, cdr *Cons) any {
 		n := eval(cdr.Car).(int)
 		target := eval(cdr.Cdr.(*Cons).Car).(*Cons)
 		return eval(target.nth(n))
+	case "lambda":
+		args := cdr.Car.(*Cons)
+		fn := cdr.Cdr.(*Cons).Car.(*Cons)
+		return &function{
+			args,
+			fn,
+		}
 	default:
 		return nil
 	}

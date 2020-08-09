@@ -56,3 +56,48 @@ func (cons *Cons) Str() string {
 
 	return "(" + carText + " . " + cdrText + ")"
 }
+
+func (cons *Cons) len() int {
+	p := cons
+	for i := 1; ; i++ {
+		if p.Cdr != nil {
+			p = p.Cdr.(*Cons)
+		} else {
+			return i
+		}
+	}
+}
+
+func walk(fn func(any) any, cons *Cons) *Cons {
+	if cons == nil {
+		return nil
+	}
+
+	var nextCar any
+	switch car := cons.Car.(type) {
+	case *Cons:
+		nextCar = walk(fn, car)
+	default:
+		nextCar = fn(car)
+	}
+	var nextCdr any
+	switch cdr := cons.Cdr.(type) {
+	case *Cons:
+		nextCdr = walk(fn, cdr)
+	default:
+		nextCdr = fn(cdr)
+	}
+	return &Cons{
+		nextCar,
+		nextCdr,
+	}
+}
+
+func replace(a, b any) func(any) any {
+	return func(target any) any {
+		if target == a {
+			return b
+		}
+		return target
+	}
+}
