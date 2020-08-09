@@ -71,9 +71,8 @@ func eval(any any) any {
 		b := eval(cdr.Cdr.(*Cons).Car)
 		if a == b {
 			return &T{}
-		} else {
-			return nil
 		}
+		return nil
 	default:
 		return nil
 	}
