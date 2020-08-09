@@ -83,6 +83,8 @@ func eval(any any) any {
 		default:
 			return eval(f)
 		}
+	case "quote":
+		return cdr.Car
 	default:
 		return nil
 	}

@@ -43,6 +43,9 @@ func main() {
 		"(eq (* 2 3) (* 3 2))",
 		"(if (atom 2) (* 1 100) (hoge))",
 		"(if nil (hoge) (car (list 1 2 3)))",
+		"(quote (1 2 3 4 5))",
+		"(quote 1)",
+		"(quote (* 1 100))",
 	}
 	for i, text := range sexps {
 		fmt.Println(i, "> ", text)
