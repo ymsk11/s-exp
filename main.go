@@ -5,29 +5,6 @@ import (
 )
 
 func main() {
-
-	s := &Cons{
-		"+",
-		&Cons{
-			41,
-			&Cons{
-				&Cons{
-					"*",
-					&Cons{
-						10,
-						&Cons{
-							10,
-							nil,
-						},
-					},
-				},
-				nil,
-			},
-		},
-	}
-	fmt.Println(s.Str())
-	fmt.Println(eval(s))
-
 	sexps := []string{
 		"(+ (* 10 10) 41)",
 		"(list 1 2 3 4 5 )",
@@ -50,12 +27,22 @@ func main() {
 		"((lambda (x) (* x x)) 10)",
 		"((lambda (x y) (* x x (+ y y))) 3 2)",
 		"(if t 1 2)",
+		"(define x (* 10 10))",
+		"(* x x)",
+		"(define f (lambda (x) (* x x)))",
+		"(f 10)",
+		"(define second (lambda (x) (car (cdr x))))",
+		"(second (list 1 2 3 4 5))",
+	}
+
+	env := &Env{
+		map[string]any{},
 	}
 	for i, text := range sexps {
 		fmt.Println(i, "> ", text)
 		parsed := ParseText(text)
 		print(parsed)
-		print(eval(parsed))
+		print(eval(parsed, env))
 		fmt.Println("")
 	}
 }

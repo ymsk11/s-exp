@@ -1,6 +1,6 @@
 package main
 
-func fold(fn func(any, any) any, accum any, cons *Cons) any {
+func fold(fn func(any, any) any, accum any, cons *Cons, env *Env) any {
 	if cons == nil {
 		return accum
 	}
@@ -13,7 +13,16 @@ func fold(fn func(any, any) any, accum any, cons *Cons) any {
 		} else {
 			cdr = cons.Cdr.(*Cons)
 		}
-		return fold(fn, fn(accum, eval(car)), cdr)
+		return fold(fn, fn(accum, eval(car, env)), cdr, env)
+	case string: // is variable
+		value := env.get(car)
+		var cdr *Cons
+		if cons.Cdr == nil {
+			cdr = nil
+		} else {
+			cdr = cons.Cdr.(*Cons)
+		}
+		return fold(fn, fn(accum, value), cdr, env)
 	default:
 		var cdr *Cons
 		if cons.Cdr == nil {
@@ -21,7 +30,7 @@ func fold(fn func(any, any) any, accum any, cons *Cons) any {
 		} else {
 			cdr = cons.Cdr.(*Cons)
 		}
-		return fold(fn, fn(accum, car), cdr)
+		return fold(fn, fn(accum, car), cdr, env)
 	}
 }
 
@@ -33,7 +42,7 @@ func prod(a any, b any) any {
 	return a.(int) * b.(int)
 }
 
-func eval(any any) any {
+func eval(any any, env *Env) any {
 	cons, ok := any.(*Cons)
 	if ok == false {
 		return any
@@ -41,39 +50,39 @@ func eval(any any) any {
 	cdr := cons.Cdr.(*Cons)
 	switch car := cons.Car.(type) {
 	case string:
-		return evalOperator(car, cdr)
+		return evalOperator(car, cdr, env)
 	case *Cons:
-		return evalCarCons(car, cdr)
+		return evalCarCons(car, cdr, env)
 	default:
 		return nil
 	}
 }
 
-func evalCarCons(car *Cons, cdr *Cons) any {
-	switch op := eval(car).(type) {
+func evalCarCons(car *Cons, cdr *Cons, env *Env) any {
+	switch op := eval(car, env).(type) {
 	case *function:
-		return op.eval(cdr)
+		return op.eval(cdr, env)
 	default:
 		return nil
 	}
 }
 
-func evalOperator(op string, cdr *Cons) any {
+func evalOperator(op string, cdr *Cons, env *Env) any {
 	switch op {
 	case "+":
-		return fold(plus, 0, cdr)
+		return fold(plus, 0, cdr, env)
 	case "*":
-		return fold(prod, 1, cdr)
+		return fold(prod, 1, cdr, env)
 	case "list":
 		return cdr
 	case "car":
-		return eval(cdr.Car).(*Cons).Car
+		return eval(cdr.Car, env).(*Cons).Car
 	case "cdr":
-		return eval(cdr.Car).(*Cons).Cdr
+		return eval(cdr.Car, env).(*Cons).Cdr
 	case "cons":
 		return &Cons{
-			eval(cdr.Car),
-			eval(cdr.Cdr.(*Cons).Car),
+			eval(cdr.Car, env),
+			eval(cdr.Cdr.(*Cons).Car, env),
 		}
 	case "atom":
 		if cdr.Car == nil {
@@ -86,28 +95,28 @@ func evalOperator(op string, cdr *Cons) any {
 			return &T{}
 		}
 	case "eq":
-		a := eval(cdr.Car)
-		b := eval(cdr.Cdr.(*Cons).Car)
+		a := eval(cdr.Car, env)
+		b := eval(cdr.Cdr.(*Cons).Car, env)
 		if a == b {
 			return &T{}
 		}
 		return nil
 	case "if":
-		cond := eval(cdr.Car)
+		cond := eval(cdr.Car, env)
 		t := cdr.Cdr.(*Cons).Car
 		f := cdr.Cdr.(*Cons).Cdr.(*Cons).Car
 		switch cond.(type) {
 		case *T:
-			return eval(t)
+			return eval(t, env)
 		default:
-			return eval(f)
+			return eval(f, env)
 		}
 	case "quote":
 		return cdr.Car
 	case "nth":
-		n := eval(cdr.Car).(int)
-		target := eval(cdr.Cdr.(*Cons).Car).(*Cons)
-		return eval(target.nth(n))
+		n := eval(cdr.Car, env).(int)
+		target := eval(cdr.Cdr.(*Cons).Car, env).(*Cons)
+		return eval(target.nth(n), env)
 	case "lambda":
 		args := cdr.Car.(*Cons)
 		fn := cdr.Cdr.(*Cons).Car.(*Cons)
@@ -115,7 +124,17 @@ func evalOperator(op string, cdr *Cons) any {
 			args,
 			fn,
 		}
+	case "define":
+		name := cdr.Car.(string)
+		value := eval(cdr.Cdr.(*Cons).Car, env)
+		env.set(name, value)
+		return nil
 	default:
+		value := env.get(op)
+		switch op := value.(type) {
+		case *function:
+			return op.eval(cdr, env)
+		}
 		return nil
 	}
 }

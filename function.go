@@ -5,7 +5,7 @@ type function struct {
 	Body *Cons
 }
 
-func (fn *function) eval(args *Cons) any {
+func (fn *function) eval(args *Cons, env *Env) any {
 	if fn.Args.len() != args.len() {
 		panic("invalid arguments")
 	}
@@ -13,5 +13,5 @@ func (fn *function) eval(args *Cons) any {
 	for i := 0; i < args.len(); i++ {
 		body = walk(replace(fn.Args.nth(i), args.nth(i)), body)
 	}
-	return eval(body)
+	return eval(body, env)
 }
