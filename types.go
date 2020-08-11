@@ -2,11 +2,6 @@ package main
 
 import "fmt"
 
-type any interface{}
-
-// T is T
-type T struct{}
-
 // Cons cell
 type Cons struct {
 	Car any

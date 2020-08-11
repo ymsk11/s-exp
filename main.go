@@ -49,6 +49,7 @@ func main() {
 		"(nth 3 (quote ( 0 1 2 3 4 5 )))",
 		"((lambda (x) (* x x)) 10)",
 		"((lambda (x y) (* x x (+ y y))) 3 2)",
+		"(if t 1 2)",
 	}
 	for i, text := range sexps {
 		fmt.Println(i, "> ", text)

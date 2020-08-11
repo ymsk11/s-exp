@@ -30,18 +30,9 @@ func parseText(tokens []string) *Cons {
 			}
 		default:
 			if nestCount == 0 {
-				i, err := strconv.Atoi(token)
-				var now *Cons
-				if err != nil {
-					now = &Cons{
-						token,
-						nil,
-					}
-				} else {
-					now = &Cons{
-						i,
-						nil,
-					}
+				now := &Cons{
+					castToken(token),
+					nil,
 				}
 				parent.Cdr = now
 				parent = now
@@ -49,6 +40,21 @@ func parseText(tokens []string) *Cons {
 		}
 	}
 	return result.Cdr.(*Cons)
+}
+
+func castToken(token string) any {
+	if token == "t" || token == "T" {
+		return &T{}
+	}
+	i, err := strconv.Atoi(token)
+	if err == nil {
+		return i
+	}
+	f, err := strconv.ParseFloat(token, 64)
+	if err == nil {
+		return f
+	}
+	return token
 }
 
 // ParseText parse string
