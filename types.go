@@ -8,17 +8,6 @@ type Cons struct {
 	Cdr any
 }
 
-func print(any any) {
-	switch a := any.(type) {
-	case *Cons:
-		fmt.Println(a.Str())
-	case *T:
-		fmt.Println("T")
-	default:
-		fmt.Println(a)
-	}
-}
-
 func (cons *Cons) nth(n int) any {
 	p := cons
 	for i := 0; i < n; i++ {

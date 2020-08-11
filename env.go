@@ -7,6 +7,13 @@ type Env struct {
 	variables map[string]any
 }
 
+// CreateEnv create environment
+func CreateEnv() *Env {
+	return &Env{
+		map[string]any{},
+	}
+}
+
 func (env *Env) copy() *Env {
 	vars := map[string]any{}
 	for i, e := range env.variables {
