@@ -78,6 +78,30 @@ func TestMain(t *testing.T) {
 			text:   "(second (quote (1 2 3 4 5)))",
 			result: "2",
 		},
+		{
+			text:   "(% 3 2)",
+			result: "1",
+		},
+		{
+			before: "(define fb (lambda (n) (if (eq (% n 15) 0) fizzbuzz (if (eq (% n 3) 0) fizz (if (eq (% n 5) 0) buzz n)))))",
+			text:   "(fb 30)",
+			result: "fizzbuzz",
+		},
+		{
+			before: "(define fb (lambda (n) (if (eq (% n 15) 0) fizzbuzz (if (eq (% n 3) 0) fizz (if (eq (% n 5) 0) buzz n)))))",
+			text:   "(fb 9)",
+			result: "fizz",
+		},
+		{
+			before: "(define fb (lambda (n) (if (eq (% n 15) 0) fizzbuzz (if (eq (% n 3) 0) fizz (if (eq (% n 5) 0) buzz n)))))",
+			text:   "(fb 10)",
+			result: "buzz",
+		},
+		{
+			before: "(define fb (lambda (n) (if (eq (% n 15) 0) fizzbuzz (if (eq (% n 3) 0) fizz (if (eq (% n 5) 0) buzz n)))))",
+			text:   "(fb 23)",
+			result: "23",
+		},
 	}
 
 	for _, c := range cases {

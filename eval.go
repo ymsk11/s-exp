@@ -73,6 +73,10 @@ func evalOperator(op string, cdr *Cons, env *Env) any {
 		return fold(plus, 0, cdr, env)
 	case "*":
 		return fold(prod, 1, cdr, env)
+	case "%":
+		a := cdr.Car.(int)
+		b := cdr.Cdr.(*Cons).Car.(int)
+		return a % b
 	case "list":
 		return cdr
 	case "car":
