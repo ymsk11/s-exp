@@ -4,8 +4,6 @@ import (
 	"fmt"
 )
 
-type any interface{}
-
 func str(any any) string {
 	if any == nil {
 		return "nil"
